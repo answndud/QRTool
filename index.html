@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📱 QR Tool - 생성 & 스캔</title>
+    <meta name="description" content="QR 코드 생성 및 스캔 도구">
+    <!-- QR Code Generator Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- QR Code Scanner Library -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+        :root {
+            --bg-primary: #09090b;
+            --bg-secondary: #18181b;
+            --bg-tertiary: #27272a;
+            --bg-card: #1c1c1f;
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent: #8b5cf6;
+            --accent-light: #a78bfa;
+            --accent-glow: rgba(139, 92, 246, 0.25);
+            --success: #22c55e;
+            --success-bg: rgba(34, 197, 94, 0.1);
+            --warning: #f59e0b;
+            --warning-bg: rgba(245, 158, 11, 0.1);
+            --danger: #ef4444;
+            --danger-bg: rgba(239, 68, 68, 0.1);
+            --border: #3f3f46;
+            --border-hover: #52525b;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #fafafa;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f4f4f5;
+            --bg-card: #ffffff;
+            --text-primary: #18181b;
+            --text-secondary: #52525b;
+            --text-muted: #a1a1aa;
+            --accent: #7c3aed;
+            --accent-light: #8b5cf6;
+            --accent-glow: rgba(124, 58, 237, 0.15);
+            --border: #e4e4e7;
+            --border-hover: #d4d4d8;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 30% 20%, var(--accent-glow) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(34, 197, 94, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            border-color: var(--accent);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            background: var(--bg-secondary);
+            padding: 0.5rem;
+            border-radius: 12px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 0.875rem 1.5rem;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Panels */
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Generator Layout */
+        .generator-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .generator-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .form-group small {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
+        input[type="text"],
+        input[type="url"],
+        input[type="email"],
+        input[type="tel"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Data Type Selector */
+        .data-types {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .data-type {
+            padding: 0.625rem 1rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.3s;
+        }
+
+        .data-type:hover {
+            border-color: var(--accent);
+        }
+
+        .data-type.active {
+            background: var(--accent-glow);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Color Pickers */
+        .color-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .color-input {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .color-input input[type="color"] {
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .color-input input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        .color-input input[type="color"]::-webkit-color-swatch {
+            border: 2px solid var(--border);
+            border-radius: 6px;
+        }
+
+        /* Size Slider */
+        .size-slider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            -webkit-appearance: none;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .size-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            min-width: 60px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--accent-glow);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        /* QR Preview */
+        .qr-preview {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 350px;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .qr-preview canvas,
+        .qr-preview img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+
+        #qrContainer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #qrContainer img,
+        #qrContainer canvas {
+            border-radius: 8px;
+        }
+
+        .qr-placeholder {
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .qr-placeholder .icon {
+            font-size: 4rem;
+            opacity: 0.3;
+            margin-bottom: 1rem;
+        }
+
+        /* Scanner */
+        .scanner-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        #reader {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        #reader video {
+            border-radius: 12px;
+        }
+
+        .scanner-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            justify-content: center;
+        }
+
+        /* Scan Result */
+        .scan-result {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            display: none;
+        }
+
+        .scan-result.visible {
+            display: block;
+        }
+
+        .scan-result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .scan-result-type {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0.75rem;
+            background: var(--accent-glow);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--accent);
+        }
+
+        .scan-result-content {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 8px;
+            word-break: break-all;
+            margin-bottom: 1rem;
+        }
+
+        /* URL Safety */
+        .url-safety {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .url-safety.visible {
+            display: block;
+        }
+
+        .url-safety.safe {
+            background: var(--success-bg);
+            border: 1px solid var(--success);
+        }
+
+        .url-safety.warning {
+            background: var(--warning-bg);
+            border: 1px solid var(--warning);
+        }
+
+        .url-safety.danger {
+            background: var(--danger-bg);
+            border: 1px solid var(--danger);
+        }
+
+        .url-safety-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .url-safety-details {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* History */
+        .history-section {
+            margin-top: 2rem;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .history-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .history-item-type {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-glow);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .history-item-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .history-item-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .history-item-time {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .history-item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .history-item-actions button {
+            padding: 0.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .history-item-actions button:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .empty-history {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-color: var(--success);
+        }
+
+        .toast.error {
+            border-color: var(--danger);
+        }
+
+        /* Contact Form Fields */
+        .contact-fields {
+            display: none;
+        }
+
+        .contact-fields.active {
+            display: block;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .color-row {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn-group .btn {
+                width: 100%;
+            }
+
+            .history-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .history-item-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+
+        /* Camera Permission */
+        .camera-permission {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .camera-permission .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .camera-permission p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" id="themeToggle" title="테마 변경">🌙</button>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">📱</div>
+                <h1>QR Tool</h1>
+            </div>
+            <p class="subtitle">QR 코드 생성 및 스캔</p>
+        </header>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" data-tab="generate">
+                <span>✨</span> 생성
+            </button>
+            <button class="tab" data-tab="scan">
+                <span>📷</span> 스캔
+            </button>
+        </div>
+
+        <!-- Generate Panel -->
+        <div class="panel active" id="generatePanel">
+            <div class="generator-grid">
+                <!-- Settings -->
+                <div class="card">
+                    <div class="card-title">⚙️ QR 코드 설정</div>
+
+                    <!-- Data Type -->
+                    <div class="form-group">
+                        <label>데이터 유형</label>
+                        <div class="data-types">
+                            <button class="data-type active" data-type="text">📝 텍스트</button>
+                            <button class="data-type" data-type="url">🔗 URL</button>
+                            <button class="data-type" data-type="contact">👤 연락처</button>
+                            <button class="data-type" data-type="wifi">📶 WiFi</button>
+                            <button class="data-type" data-type="email">📧 이메일</button>
+                        </div>
+                    </div>
+
+                    <!-- Text Input -->
+                    <div class="form-group" id="textInput">
+                        <label for="qrText">내용</label>
+                        <textarea id="qrText" placeholder="QR 코드에 담을 내용을 입력하세요..."></textarea>
+                    </div>
+
+                    <!-- URL Input -->
+                    <div class="form-group" id="urlInput" style="display: none;">
+                        <label for="qrUrl">URL</label>
+                        <input type="url" id="qrUrl" placeholder="https://example.com">
+                    </div>
+
+                    <!-- Contact Fields -->
+                    <div class="contact-fields" id="contactFields">
+                        <div class="form-group">
+                            <label for="contactName">이름</label>
+                            <input type="text" id="contactName" placeholder="홍길동">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactPhone">전화번호</label>
+                            <input type="tel" id="contactPhone" placeholder="010-1234-5678">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail">이메일</label>
+                            <input type="email" id="contactEmail" placeholder="email@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactOrg">회사/조직</label>
+                            <input type="text" id="contactOrg" placeholder="회사명">
+                        </div>
+                    </div>
+
+                    <!-- WiFi Fields -->
+                    <div class="contact-fields" id="wifiFields">
+                        <div class="form-group">
+                            <label for="wifiSsid">네트워크 이름 (SSID)</label>
+                            <input type="text" id="wifiSsid" placeholder="WiFi 이름">
+                        </div>
+                        <div class="form-group">
+                            <label for="wifiPassword">비밀번호</label>
+                            <input type="text" id="wifiPassword" placeholder="WiFi 비밀번호">
+                        </div>
+                        <div class="form-group">
+                            <label for="wifiType">보안 유형</label>
+                            <select id="wifiType">
+                                <option value="WPA">WPA/WPA2</option>
+                                <option value="WEP">WEP</option>
+                                <option value="nopass">없음</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Email Fields -->
+                    <div class="contact-fields" id="emailFields">
+                        <div class="form-group">
+                            <label for="emailTo">받는 사람</label>
+                            <input type="email" id="emailTo" placeholder="recipient@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="emailSubject">제목</label>
+                            <input type="text" id="emailSubject" placeholder="이메일 제목">
+                        </div>
+                        <div class="form-group">
+                            <label for="emailBody">본문</label>
+                            <textarea id="emailBody" placeholder="이메일 내용..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Colors -->
+                    <div class="form-group">
+                        <label>색상</label>
+                        <div class="color-row">
+                            <div class="color-input">
+                                <input type="color" id="qrColor" value="#000000">
+                                <span>QR 코드</span>
+                            </div>
+                            <div class="color-input">
+                                <input type="color" id="bgColor" value="#ffffff">
+                                <span>배경</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Size -->
+                    <div class="form-group">
+                        <label>크기</label>
+                        <div class="size-slider">
+                            <input type="range" id="qrSize" min="128" max="512" value="256" step="32">
+                            <span class="size-value" id="sizeValue">256px</span>
+                        </div>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <button class="btn btn-primary" id="generateBtn" style="width: 100%; margin-top: 1rem;">
+                        ✨ QR 코드 생성
+                    </button>
+                </div>
+
+                <!-- Preview -->
+                <div class="card">
+                    <div class="card-title">👁️ 미리보기</div>
+                    <div class="qr-preview" id="qrPreview">
+                        <div class="qr-placeholder">
+                            <div class="icon">📱</div>
+                            <p>왼쪽에서 내용을 입력하고<br>생성 버튼을 클릭하세요</p>
+                        </div>
+                    </div>
+
+                    <div class="btn-group" style="margin-top: 1.5rem;" id="downloadBtns">
+                        <button class="btn btn-secondary" id="downloadPng" disabled>
+                            📥 PNG 다운로드
+                        </button>
+                        <button class="btn btn-secondary" id="downloadSvg" disabled>
+                            📥 SVG 다운로드
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scan Panel -->
+        <div class="panel" id="scanPanel">
+            <div class="scanner-container">
+                <div class="card">
+                    <div class="card-title">📷 QR 코드 스캔</div>
+                    
+                    <div class="scanner-controls">
+                        <button class="btn btn-primary" id="startScan">
+                            📷 스캔 시작
+                        </button>
+                        <button class="btn btn-secondary" id="stopScan" disabled>
+                            ⏹️ 중지
+                        </button>
+                    </div>
+
+                    <div id="reader"></div>
+
+                    <!-- Scan Result -->
+                    <div class="scan-result" id="scanResult">
+                        <div class="scan-result-header">
+                            <span class="scan-result-type" id="resultType">
+                                <span>📝</span> 텍스트
+                            </span>
+                            <button class="btn btn-secondary" id="copyResult" style="padding: 0.5rem 1rem;">
+                                📋 복사
+                            </button>
+                        </div>
+
+                        <!-- URL Safety Check -->
+                        <div class="url-safety" id="urlSafety">
+                            <div class="url-safety-header">
+                                <span id="safetyIcon">✅</span>
+                                <span id="safetyTitle">안전한 URL</span>
+                            </div>
+                            <div class="url-safety-details" id="safetyDetails"></div>
+                        </div>
+
+                        <div class="scan-result-content" id="resultContent"></div>
+
+                        <div class="btn-group">
+                            <button class="btn btn-success" id="openUrl" style="display: none;">
+                                🔗 URL 열기
+                            </button>
+                            <button class="btn btn-secondary" id="saveToHistory">
+                                💾 히스토리에 저장
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- History -->
+                <div class="history-section">
+                    <div class="history-header">
+                        <h3>📜 스캔 히스토리</h3>
+                        <div class="btn-group">
+                            <button class="btn btn-secondary" id="exportCsv" style="padding: 0.5rem 1rem;">
+                                📄 CSV 내보내기
+                            </button>
+                            <button class="btn btn-secondary" id="clearHistory" style="padding: 0.5rem 1rem;">
+                                🗑️ 초기화
+                            </button>
+                        </div>
+                    </div>
+                    <div class="history-list" id="historyList">
+                        <div class="empty-history">
+                            <p>스캔 기록이 없습니다</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <a href="https://github.com/answndud/QRTool" target="_blank">View on GitHub</a>
+        </footer>
+    </div>
+
+    <div class="toast" id="toast">
+        <span id="toastIcon">✅</span>
+        <span id="toastMessage">완료!</span>
+    </div>
+
+    <script>
+        // ============================================
+        // State
+        // ============================================
+        let currentDataType = 'text';
+        let generatedQRData = null;
+        let html5QrCode = null;
+        let isScanning = false;
+        let scanHistory = JSON.parse(localStorage.getItem('qr-scan-history') || '[]');
+
+        // ============================================
+        // Theme
+        // ============================================
+        const themeToggle = document.getElementById('themeToggle');
+        const savedTheme = localStorage.getItem('qr-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+        themeToggle.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('qr-theme', next);
+            themeToggle.textContent = next === 'dark' ? '☀️' : '🌙';
+        });
+
+        // ============================================
+        // Tabs
+        // ============================================
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(`${tab.dataset.tab}Panel`).classList.add('active');
+
+                // Stop scanning when switching tabs
+                if (tab.dataset.tab === 'generate' && isScanning) {
+                    stopScanning();
+                }
+            });
+        });
+
+        // ============================================
+        // Data Type Selection
+        // ============================================
+        document.querySelectorAll('.data-type').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.data-type').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentDataType = btn.dataset.type;
+                updateInputFields();
+            });
+        });
+
+        function updateInputFields() {
+            // Hide all fields
+            document.getElementById('textInput').style.display = 'none';
+            document.getElementById('urlInput').style.display = 'none';
+            document.getElementById('contactFields').classList.remove('active');
+            document.getElementById('wifiFields').classList.remove('active');
+            document.getElementById('emailFields').classList.remove('active');
+
+            // Show relevant field
+            switch (currentDataType) {
+                case 'text':
+                    document.getElementById('textInput').style.display = 'block';
+                    break;
+                case 'url':
+                    document.getElementById('urlInput').style.display = 'block';
+                    break;
+                case 'contact':
+                    document.getElementById('contactFields').classList.add('active');
+                    break;
+                case 'wifi':
+                    document.getElementById('wifiFields').classList.add('active');
+                    break;
+                case 'email':
+                    document.getElementById('emailFields').classList.add('active');
+                    break;
+            }
+        }
+
+        // ============================================
+        // QR Code Generation
+        // ============================================
+        document.getElementById('qrSize').addEventListener('input', (e) => {
+            document.getElementById('sizeValue').textContent = `${e.target.value}px`;
+        });
+
+        document.getElementById('generateBtn').addEventListener('click', generateQR);
+
+        function getQRData() {
+            switch (currentDataType) {
+                case 'text':
+                    return document.getElementById('qrText').value;
+                case 'url':
+                    return document.getElementById('qrUrl').value;
+                case 'contact':
+                    const name = document.getElementById('contactName').value;
+                    const phone = document.getElementById('contactPhone').value;
+                    const email = document.getElementById('contactEmail').value;
+                    const org = document.getElementById('contactOrg').value;
+                    return `BEGIN:VCARD\nVERSION:3.0\nN:${name}\nFN:${name}\nTEL:${phone}\nEMAIL:${email}\nORG:${org}\nEND:VCARD`;
+                case 'wifi':
+                    const ssid = document.getElementById('wifiSsid').value;
+                    const password = document.getElementById('wifiPassword').value;
+                    const type = document.getElementById('wifiType').value;
+                    return `WIFI:T:${type};S:${ssid};P:${password};;`;
+                case 'email':
+                    const to = document.getElementById('emailTo').value;
+                    const subject = encodeURIComponent(document.getElementById('emailSubject').value);
+                    const body = encodeURIComponent(document.getElementById('emailBody').value);
+                    return `mailto:${to}?subject=${subject}&body=${body}`;
+                default:
+                    return '';
+            }
+        }
+
+        let qrCodeInstance = null;
+
+        function generateQR() {
+            const data = getQRData();
+            if (!data.trim()) {
+                showToast('❌', '내용을 입력해주세요');
+                return;
+            }
+
+            generatedQRData = data;
+            const size = parseInt(document.getElementById('qrSize').value);
+            const color = document.getElementById('qrColor').value;
+            const bgColor = document.getElementById('bgColor').value;
+
+            const preview = document.getElementById('qrPreview');
+            preview.innerHTML = '';
+
+            // Create container div for QR code
+            const qrContainer = document.createElement('div');
+            qrContainer.id = 'qrContainer';
+            preview.appendChild(qrContainer);
+
+            try {
+                // Clear previous instance
+                if (qrCodeInstance) {
+                    qrCodeInstance.clear();
+                }
+
+                // Create new QR code using qrcodejs library
+                qrCodeInstance = new QRCode(qrContainer, {
+                    text: data,
+                    width: size,
+                    height: size,
+                    colorDark: color,
+                    colorLight: bgColor,
+                    correctLevel: QRCode.CorrectLevel.M
+                });
+
+                document.getElementById('downloadPng').disabled = false;
+                document.getElementById('downloadSvg').disabled = false;
+                showToast('✅', 'QR 코드가 생성되었습니다');
+            } catch (error) {
+                showToast('❌', '생성 중 오류가 발생했습니다');
+                console.error(error);
+            }
+        }
+
+        // Download PNG
+        document.getElementById('downloadPng').addEventListener('click', () => {
+            const container = document.getElementById('qrContainer');
+            if (!container) return;
+
+            // qrcodejs creates both canvas and img, prefer canvas
+            const canvas = container.querySelector('canvas');
+            const img = container.querySelector('img');
+            
+            if (canvas) {
+                const link = document.createElement('a');
+                link.download = 'qrcode.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                showToast('✅', 'PNG 파일이 다운로드되었습니다');
+            } else if (img) {
+                const link = document.createElement('a');
+                link.download = 'qrcode.png';
+                link.href = img.src;
+                link.click();
+                showToast('✅', 'PNG 파일이 다운로드되었습니다');
+            }
+        });
+
+        // Download SVG
+        document.getElementById('downloadSvg').addEventListener('click', () => {
+            if (!generatedQRData) return;
+
+            const container = document.getElementById('qrContainer');
+            if (!container) return;
+
+            const canvas = container.querySelector('canvas');
+            if (!canvas) {
+                showToast('❌', 'QR 코드를 먼저 생성해주세요');
+                return;
+            }
+
+            const size = parseInt(document.getElementById('qrSize').value);
+            const color = document.getElementById('qrColor').value;
+            const bgColor = document.getElementById('bgColor').value;
+
+            // Convert canvas to SVG manually
+            const ctx = canvas.getContext('2d');
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const moduleCount = Math.sqrt(imageData.data.length / 4);
+            
+            // Create SVG from canvas data
+            let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${canvas.width} ${canvas.height}">`;
+            svg += `<rect width="100%" height="100%" fill="${bgColor}"/>`;
+            
+            // Sample the canvas and create rectangles for dark modules
+            const moduleSize = canvas.width / Math.round(canvas.width / 10); // approximate module size
+            for (let y = 0; y < canvas.height; y += moduleSize) {
+                for (let x = 0; x < canvas.width; x += moduleSize) {
+                    const idx = (Math.floor(y) * canvas.width + Math.floor(x)) * 4;
+                    // Check if pixel is dark
+                    if (imageData.data[idx] < 128) {
+                        svg += `<rect x="${x}" y="${y}" width="${moduleSize}" height="${moduleSize}" fill="${color}"/>`;
+                    }
+                }
+            }
+            svg += '</svg>';
+
+            const blob = new Blob([svg], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.download = 'qrcode.svg';
+            link.href = url;
+            link.click();
+            URL.revokeObjectURL(url);
+            showToast('✅', 'SVG 파일이 다운로드되었습니다');
+        });
+
+        // ============================================
+        // QR Code Scanning
+        // ============================================
+        const startScanBtn = document.getElementById('startScan');
+        const stopScanBtn = document.getElementById('stopScan');
+
+        startScanBtn.addEventListener('click', startScanning);
+        stopScanBtn.addEventListener('click', stopScanning);
+
+        async function startScanning() {
+            try {
+                html5QrCode = new Html5Qrcode("reader");
+                
+                await html5QrCode.start(
+                    { facingMode: "environment" },
+                    {
+                        fps: 10,
+                        qrbox: { width: 250, height: 250 }
+                    },
+                    onScanSuccess,
+                    onScanFailure
+                );
+
+                isScanning = true;
+                startScanBtn.disabled = true;
+                stopScanBtn.disabled = false;
+                showToast('📷', '카메라가 활성화되었습니다');
+            } catch (error) {
+                console.error(error);
+                showToast('❌', '카메라 접근 권한이 필요합니다');
+            }
+        }
+
+        async function stopScanning() {
+            if (html5QrCode && isScanning) {
+                await html5QrCode.stop();
+                html5QrCode = null;
+                isScanning = false;
+                startScanBtn.disabled = false;
+                stopScanBtn.disabled = true;
+            }
+        }
+
+        function onScanSuccess(decodedText, decodedResult) {
+            // Vibrate if available
+            if (navigator.vibrate) {
+                navigator.vibrate(200);
+            }
+
+            displayScanResult(decodedText);
+            showToast('✅', 'QR 코드를 스캔했습니다');
+        }
+
+        function onScanFailure(error) {
+            // Silent failure - just keep scanning
+        }
+
+        function displayScanResult(text) {
+            const resultDiv = document.getElementById('scanResult');
+            const resultContent = document.getElementById('resultContent');
+            const resultType = document.getElementById('resultType');
+            const openUrlBtn = document.getElementById('openUrl');
+            const urlSafety = document.getElementById('urlSafety');
+
+            resultContent.textContent = text;
+            resultDiv.classList.add('visible');
+
+            // Detect type and show appropriate UI
+            const type = detectContentType(text);
+            resultType.innerHTML = getTypeIcon(type);
+            
+            if (type === 'url') {
+                openUrlBtn.style.display = 'inline-flex';
+                openUrlBtn.onclick = () => window.open(text, '_blank');
+                
+                // URL Safety Check
+                const safety = checkUrlSafety(text);
+                displayUrlSafety(safety);
+            } else {
+                openUrlBtn.style.display = 'none';
+                urlSafety.classList.remove('visible');
+            }
+        }
+
+        function detectContentType(text) {
+            if (text.startsWith('http://') || text.startsWith('https://')) return 'url';
+            if (text.startsWith('BEGIN:VCARD')) return 'contact';
+            if (text.startsWith('WIFI:')) return 'wifi';
+            if (text.startsWith('mailto:')) return 'email';
+            if (text.startsWith('tel:')) return 'phone';
+            return 'text';
+        }
+
+        function getTypeIcon(type) {
+            const icons = {
+                url: '<span>🔗</span> URL',
+                contact: '<span>👤</span> 연락처',
+                wifi: '<span>📶</span> WiFi',
+                email: '<span>📧</span> 이메일',
+                phone: '<span>📞</span> 전화번호',
+                text: '<span>📝</span> 텍스트'
+            };
+            return icons[type] || icons.text;
+        }
+
+        // ============================================
+        // URL Safety Check
+        // ============================================
+        function checkUrlSafety(url) {
+            const result = {
+                level: 'safe',
+                title: '안전한 URL',
+                details: []
+            };
+
+            try {
+                const urlObj = new URL(url);
+
+                // Check protocol
+                if (urlObj.protocol === 'http:') {
+                    result.level = 'warning';
+                    result.title = '주의 필요';
+                    result.details.push('⚠️ HTTPS가 아닌 HTTP 프로토콜 사용');
+                }
+
+                // Check for suspicious patterns
+                const suspiciousPatterns = [
+                    { pattern: /bit\.ly|tinyurl|t\.co|goo\.gl/i, message: '단축 URL 사용' },
+                    { pattern: /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/, message: 'IP 주소 직접 사용' },
+                    { pattern: /login|signin|account|password|bank/i, message: '민감한 키워드 포함' },
+                    { pattern: /@/, message: '@ 문자 포함 (피싱 의심)' }
+                ];
+
+                suspiciousPatterns.forEach(({ pattern, message }) => {
+                    if (pattern.test(url)) {
+                        if (result.level === 'safe') result.level = 'warning';
+                        result.details.push(`⚠️ ${message}`);
+                    }
+                });
+
+                // Check URL length
+                if (url.length > 200) {
+                    result.details.push('⚠️ 매우 긴 URL');
+                    if (result.level === 'safe') result.level = 'warning';
+                }
+
+                // Check for known dangerous TLDs
+                const dangerousTlds = ['.tk', '.ml', '.ga', '.cf', '.gq'];
+                if (dangerousTlds.some(tld => urlObj.hostname.endsWith(tld))) {
+                    result.level = 'danger';
+                    result.title = '위험 가능성';
+                    result.details.push('🚨 스팸에 자주 사용되는 도메인');
+                }
+
+                // If no issues found
+                if (result.details.length === 0) {
+                    result.details.push('✅ HTTPS 프로토콜 사용');
+                    result.details.push('✅ 의심스러운 패턴 없음');
+                }
+
+            } catch (e) {
+                result.level = 'danger';
+                result.title = '잘못된 URL';
+                result.details.push('🚨 URL 형식이 올바르지 않음');
+            }
+
+            return result;
+        }
+
+        function displayUrlSafety(safety) {
+            const urlSafety = document.getElementById('urlSafety');
+            const safetyIcon = document.getElementById('safetyIcon');
+            const safetyTitle = document.getElementById('safetyTitle');
+            const safetyDetails = document.getElementById('safetyDetails');
+
+            urlSafety.className = 'url-safety visible ' + safety.level;
+            
+            const icons = { safe: '✅', warning: '⚠️', danger: '🚨' };
+            safetyIcon.textContent = icons[safety.level];
+            safetyTitle.textContent = safety.title;
+            safetyDetails.innerHTML = safety.details.join('<br>');
+        }
+
+        // ============================================
+        // History Management
+        // ============================================
+        document.getElementById('copyResult').addEventListener('click', () => {
+            const content = document.getElementById('resultContent').textContent;
+            navigator.clipboard.writeText(content).then(() => {
+                showToast('✅', '클립보드에 복사되었습니다');
+            });
+        });
+
+        document.getElementById('saveToHistory').addEventListener('click', () => {
+            const content = document.getElementById('resultContent').textContent;
+            const type = detectContentType(content);
+            
+            const item = {
+                id: Date.now(),
+                content,
+                type,
+                timestamp: new Date().toISOString()
+            };
+
+            scanHistory.unshift(item);
+            if (scanHistory.length > 50) scanHistory.pop(); // Limit to 50 items
+            
+            localStorage.setItem('qr-scan-history', JSON.stringify(scanHistory));
+            renderHistory();
+            showToast('✅', '히스토리에 저장되었습니다');
+        });
+
+        document.getElementById('clearHistory').addEventListener('click', () => {
+            if (confirm('모든 스캔 기록을 삭제하시겠습니까?')) {
+                scanHistory = [];
+                localStorage.setItem('qr-scan-history', JSON.stringify(scanHistory));
+                renderHistory();
+                showToast('✅', '히스토리가 초기화되었습니다');
+            }
+        });
+
+        document.getElementById('exportCsv').addEventListener('click', () => {
+            if (scanHistory.length === 0) {
+                showToast('❌', '내보낼 기록이 없습니다');
+                return;
+            }
+
+            let csv = 'Type,Content,Timestamp\n';
+            scanHistory.forEach(item => {
+                const content = item.content.replace(/"/g, '""').replace(/\n/g, ' ');
+                csv += `"${item.type}","${content}","${item.timestamp}"\n`;
+            });
+
+            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.download = `qr-scan-history-${new Date().toISOString().slice(0,10)}.csv`;
+            link.href = url;
+            link.click();
+            URL.revokeObjectURL(url);
+            showToast('✅', 'CSV 파일이 다운로드되었습니다');
+        });
+
+        function renderHistory() {
+            const historyList = document.getElementById('historyList');
+            
+            if (scanHistory.length === 0) {
+                historyList.innerHTML = '<div class="empty-history"><p>스캔 기록이 없습니다</p></div>';
+                return;
+            }
+
+            const typeIcons = {
+                url: '🔗',
+                contact: '👤',
+                wifi: '📶',
+                email: '📧',
+                phone: '📞',
+                text: '📝'
+            };
+
+            historyList.innerHTML = scanHistory.map(item => `
+                <div class="history-item" data-id="${item.id}">
+                    <div class="history-item-type">${typeIcons[item.type] || '📝'}</div>
+                    <div class="history-item-content">
+                        <div class="history-item-text">${escapeHtml(item.content)}</div>
+                        <div class="history-item-time">${formatDate(item.timestamp)}</div>
+                    </div>
+                    <div class="history-item-actions">
+                        <button onclick="copyHistoryItem('${item.id}')" title="복사">📋</button>
+                        <button onclick="deleteHistoryItem('${item.id}')" title="삭제">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function copyHistoryItem(id) {
+            const item = scanHistory.find(h => h.id === parseInt(id));
+            if (item) {
+                navigator.clipboard.writeText(item.content).then(() => {
+                    showToast('✅', '클립보드에 복사되었습니다');
+                });
+            }
+        }
+
+        function deleteHistoryItem(id) {
+            scanHistory = scanHistory.filter(h => h.id !== parseInt(id));
+            localStorage.setItem('qr-scan-history', JSON.stringify(scanHistory));
+            renderHistory();
+            showToast('✅', '삭제되었습니다');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleString('ko-KR', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // ============================================
+        // Toast
+        // ============================================
+        function showToast(icon, message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastIcon').textContent = icon;
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ============================================
+        // Initialize
+        // ============================================
+        renderHistory();
+    </script>
+</body>
+</html>
+

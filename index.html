@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko" data-theme="dark">
+<html lang="ko" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📱 QR Tool - 생성 & 스캔</title>
+    <title> QR Tool - 생성 & 스캔</title>
     <meta name="description" content="QR 코드 생성 및 스캔 도구">
     <!-- QR Code Generator Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -71,7 +71,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
+            background:
                 radial-gradient(ellipse at 30% 20%, var(--accent-glow) 0%, transparent 50%),
                 radial-gradient(ellipse at 70% 80%, rgba(34, 197, 94, 0.08) 0%, transparent 50%);
             pointer-events: none;
@@ -755,15 +755,190 @@
             color: var(--text-secondary);
             margin-bottom: 1.5rem;
         }
+    
+
+        /* Minimal light interface override */
+        :root, [data-theme="light"] {
+            --bg-primary: #f7f8f8;
+            --bg-secondary: #f0f2f2;
+            --bg-tertiary: #e7ebeb;
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --bg-input: #eef0f1;
+            --text-primary: #111416;
+            --text-secondary: #4f5b61;
+            --text-muted: #7b878c;
+            --accent: #0f766e;
+            --accent-primary: #0f766e;
+            --accent-secondary: #0f766e;
+            --accent-light: #0f766e;
+            --accent-glow: rgba(15, 118, 110, 0.08);
+            --success: #157f3b;
+            --warning: #9a6700;
+            --danger: #b42318;
+            --error: #b42318;
+            --border: #d9dedf;
+            --border-color: #d9dedf;
+            --border-hover: #b8c2c6;
+            --shadow: 0 1px 2px rgba(17, 20, 22, 0.06);
+            --shadow-card: 0 1px 2px rgba(17, 20, 22, 0.06);
+            --gradient-accent: none;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #101314;
+            --bg-secondary: #171b1d;
+            --bg-tertiary: #202628;
+            --bg-card: rgba(24, 28, 30, 0.92);
+            --bg-input: #202628;
+            --text-primary: #f2f4f4;
+            --text-secondary: #b4bdc1;
+            --text-muted: #7f8b91;
+            --accent: #72d6c9;
+            --accent-primary: #72d6c9;
+            --accent-secondary: #72d6c9;
+            --accent-light: #72d6c9;
+            --accent-glow: rgba(114, 214, 201, 0.08);
+            --success: #8bd39a;
+            --warning: #e0b85f;
+            --danger: #ffb4ab;
+            --error: #ffb4ab;
+            --border: #30383c;
+            --border-color: #30383c;
+            --border-hover: #465156;
+            --shadow: 0 1px 2px rgba(0, 0, 0, 0.28);
+            --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.28);
+            --gradient-accent: none;
+        }
+
+        body {
+            background: var(--bg-primary) !important;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        body::before, .logo-icon, .upload-icon, .drop-overlay-icon, .icon:empty, .card-header-icon, .result-icon {
+            display: none !important;
+        }
+
+        .container {
+            max-width: 1120px;
+            padding: 28px 18px;
+        }
+
+        header {
+            text-align: left;
+            margin-bottom: 22px;
+            padding-top: 0;
+        }
+
+        h1, .logo h1 {
+            color: var(--text-primary) !important;
+            background: none !important;
+            -webkit-text-fill-color: currentColor !important;
+            font-size: clamp(1.45rem, 3vw, 2.05rem) !important;
+            font-weight: 600 !important;
+            letter-spacing: 0 !important;
+            text-shadow: none !important;
+        }
+
+        .subtitle, .logo span {
+            color: var(--text-secondary) !important;
+            font-size: 0.86rem !important;
+            max-width: 620px;
+            margin-left: 0;
+        }
+
+        .theme-toggle, #theme-toggle, #themeToggle {
+            min-width: 64px;
+            min-height: 34px;
+            width: auto !important;
+            height: 34px !important;
+            border-radius: 8px !important;
+            padding: 0 10px !important;
+            background: var(--bg-card) !important;
+            border: 1px solid var(--border-color, var(--border)) !important;
+            color: var(--text-secondary) !important;
+            box-shadow: none !important;
+            transform: none !important;
+            font-size: 0.78rem !important;
+        }
+
+        .card, .panel, .section, .input-panel, .output-panel, .preview-panel,
+        .control-panel, .controls-panel, .options-panel, .settings-panel,
+        .editor-panel, .preview-section, .tool-panel, .qr-card,
+        .generator-card, .scanner-card, .info-section, .stats-panel,
+        .practice-area, .performance-chart, .tips-section, .stat-item,
+        .drop-zone, .upload-zone, .batch-item, .history-item {
+            background: var(--bg-card) !important;
+            border: 1px solid var(--border-color, var(--border)) !important;
+            border-radius: 10px !important;
+            box-shadow: 0 1px 2px rgba(17, 20, 22, 0.06) !important;
+        }
+
+        .card-header, .panel-header, .section-header, .preview-header {
+            padding: 13px 16px !important;
+            border-bottom: 1px solid var(--border-color, var(--border)) !important;
+        }
+
+        .card-body, .panel-body, .section-body, .controls-panel, .preview-section {
+            padding: 16px !important;
+        }
+
+        button, .btn, .button, .tab, .data-type, .preview-tab,
+        .share-btn, .reset-stats-btn, .retry-btn, .reserve-btn,
+        .download-btn, .action-btn, .copy-btn, .panel-btn {
+            border-radius: 8px !important;
+            box-shadow: none !important;
+            background-image: none !important;
+            transform: none !important;
+            transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease !important;
+        }
+
+        .btn-accent, .btn-primary, .btn-success,
+        .tab.active, .data-type.active, .preview-tab.active,
+        .reserve-btn:not(:disabled), .download-btn, .action-btn.primary {
+            background: var(--accent-primary, var(--accent)) !important;
+            border-color: var(--accent-primary, var(--accent)) !important;
+            color: #fff !important;
+        }
+
+        input, textarea, select, .editor, .preview, .output,
+        .input-area, .output-area, .format-select {
+            background: var(--bg-input, var(--bg-secondary)) !important;
+            color: var(--text-primary) !important;
+            border: 1px solid var(--border-color, var(--border)) !important;
+            border-radius: 8px !important;
+        }
+
+        input[type="range"] {
+            accent-color: var(--accent-primary, var(--accent));
+        }
+
+        .drop-zone, .upload-zone {
+            padding: 42px 22px !important;
+            border-style: dashed !important;
+        }
+
+        .section-title, .panel-title, .card-title, .controls-title, h2, h3 {
+            color: var(--text-primary) !important;
+            letter-spacing: 0 !important;
+        }
+
+        footer {
+            color: var(--text-muted) !important;
+            padding: 22px !important;
+            font-size: 0.78rem !important;
+        }
+
     </style>
 </head>
 <body>
-    <button class="theme-toggle" id="themeToggle" title="테마 변경">🌙</button>
+    <button class="theme-toggle" id="themeToggle" title="테마 변경">Light</button>
 
     <div class="container">
         <header>
             <div class="logo">
-                <div class="logo-icon">📱</div>
+                <div class="logo-icon"></div>
                 <h1>QR Tool</h1>
             </div>
             <p class="subtitle">QR 코드 생성 및 스캔</p>
@@ -772,10 +947,10 @@
         <!-- Tabs -->
         <div class="tabs">
             <button class="tab active" data-tab="generate">
-                <span>✨</span> 생성
+                <span></span> 생성
             </button>
             <button class="tab" data-tab="scan">
-                <span>📷</span> 스캔
+                <span></span> 스캔
             </button>
         </div>
 
@@ -784,17 +959,17 @@
             <div class="generator-grid">
                 <!-- Settings -->
                 <div class="card">
-                    <div class="card-title">⚙️ QR 코드 설정</div>
+                    <div class="card-title"> QR 코드 설정</div>
 
                     <!-- Data Type -->
                     <div class="form-group">
                         <label>데이터 유형</label>
                         <div class="data-types">
-                            <button class="data-type active" data-type="text">📝 텍스트</button>
-                            <button class="data-type" data-type="url">🔗 URL</button>
-                            <button class="data-type" data-type="contact">👤 연락처</button>
-                            <button class="data-type" data-type="wifi">📶 WiFi</button>
-                            <button class="data-type" data-type="email">📧 이메일</button>
+                            <button class="data-type active" data-type="text"> 텍스트</button>
+                            <button class="data-type" data-type="url"> URL</button>
+                            <button class="data-type" data-type="contact"> 연락처</button>
+                            <button class="data-type" data-type="wifi"> WiFi</button>
+                            <button class="data-type" data-type="email"> 이메일</button>
                         </div>
                     </div>
 
@@ -892,26 +1067,26 @@
 
                     <!-- Generate Button -->
                     <button class="btn btn-primary" id="generateBtn" style="width: 100%; margin-top: 1rem;">
-                        ✨ QR 코드 생성
+                         QR 코드 생성
                     </button>
                 </div>
 
                 <!-- Preview -->
                 <div class="card">
-                    <div class="card-title">👁️ 미리보기</div>
+                    <div class="card-title"> 미리보기</div>
                     <div class="qr-preview" id="qrPreview">
                         <div class="qr-placeholder">
-                            <div class="icon">📱</div>
+                            <div class="icon"></div>
                             <p>왼쪽에서 내용을 입력하고<br>생성 버튼을 클릭하세요</p>
                         </div>
                     </div>
 
                     <div class="btn-group" style="margin-top: 1.5rem;" id="downloadBtns">
                         <button class="btn btn-secondary" id="downloadPng" disabled>
-                            📥 PNG 다운로드
+                             PNG 다운로드
                         </button>
                         <button class="btn btn-secondary" id="downloadSvg" disabled>
-                            📥 SVG 다운로드
+                             SVG 다운로드
                         </button>
                     </div>
                 </div>
@@ -922,14 +1097,14 @@
         <div class="panel" id="scanPanel">
             <div class="scanner-container">
                 <div class="card">
-                    <div class="card-title">📷 QR 코드 스캔</div>
-                    
+                    <div class="card-title"> QR 코드 스캔</div>
+
                     <div class="scanner-controls">
                         <button class="btn btn-primary" id="startScan">
-                            📷 스캔 시작
+                             스캔 시작
                         </button>
                         <button class="btn btn-secondary" id="stopScan" disabled>
-                            ⏹️ 중지
+                            ⏹ 중지
                         </button>
                     </div>
 
@@ -939,17 +1114,17 @@
                     <div class="scan-result" id="scanResult">
                         <div class="scan-result-header">
                             <span class="scan-result-type" id="resultType">
-                                <span>📝</span> 텍스트
+                                <span></span> 텍스트
                             </span>
                             <button class="btn btn-secondary" id="copyResult" style="padding: 0.5rem 1rem;">
-                                📋 복사
+                                 복사
                             </button>
                         </div>
 
                         <!-- URL Safety Check -->
                         <div class="url-safety" id="urlSafety">
                             <div class="url-safety-header">
-                                <span id="safetyIcon">✅</span>
+                                <span id="safetyIcon"></span>
                                 <span id="safetyTitle">안전한 URL</span>
                             </div>
                             <div class="url-safety-details" id="safetyDetails"></div>
@@ -959,10 +1134,10 @@
 
                         <div class="btn-group">
                             <button class="btn btn-success" id="openUrl" style="display: none;">
-                                🔗 URL 열기
+                                 URL 열기
                             </button>
                             <button class="btn btn-secondary" id="saveToHistory">
-                                💾 히스토리에 저장
+                                 히스토리에 저장
                             </button>
                         </div>
                     </div>
@@ -971,13 +1146,13 @@
                 <!-- History -->
                 <div class="history-section">
                     <div class="history-header">
-                        <h3>📜 스캔 히스토리</h3>
+                        <h3> 스캔 히스토리</h3>
                         <div class="btn-group">
                             <button class="btn btn-secondary" id="exportCsv" style="padding: 0.5rem 1rem;">
-                                📄 CSV 내보내기
+                                 CSV 내보내기
                             </button>
                             <button class="btn btn-secondary" id="clearHistory" style="padding: 0.5rem 1rem;">
-                                🗑️ 초기화
+                                 초기화
                             </button>
                         </div>
                     </div>
@@ -996,7 +1171,7 @@
     </div>
 
     <div class="toast" id="toast">
-        <span id="toastIcon">✅</span>
+        <span id="toastIcon"></span>
         <span id="toastMessage">완료!</span>
     </div>
 
@@ -1014,16 +1189,16 @@
         // Theme
         // ============================================
         const themeToggle = document.getElementById('themeToggle');
-        const savedTheme = localStorage.getItem('qr-theme') || 'dark';
+        const savedTheme = localStorage.getItem('qr-theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
-        themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+        themeToggle.textContent = savedTheme === 'dark' ? 'Dark' : 'Light';
 
         themeToggle.addEventListener('click', () => {
             const current = document.documentElement.getAttribute('data-theme');
             const next = current === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', next);
             localStorage.setItem('qr-theme', next);
-            themeToggle.textContent = next === 'dark' ? '☀️' : '🌙';
+            themeToggle.textContent = next === 'dark' ? 'Dark' : 'Light';
         });
 
         // ============================================
@@ -1033,7 +1208,7 @@
             tab.addEventListener('click', () => {
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
                 document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-                
+
                 tab.classList.add('active');
                 document.getElementById(`${tab.dataset.tab}Panel`).classList.add('active');
 
@@ -1125,7 +1300,7 @@
         function generateQR() {
             const data = getQRData();
             if (!data.trim()) {
-                showToast('❌', '내용을 입력해주세요');
+                showToast('', '내용을 입력해주세요');
                 return;
             }
 
@@ -1160,9 +1335,9 @@
 
                 document.getElementById('downloadPng').disabled = false;
                 document.getElementById('downloadSvg').disabled = false;
-                showToast('✅', 'QR 코드가 생성되었습니다');
+                showToast('', 'QR 코드가 생성되었습니다');
             } catch (error) {
-                showToast('❌', '생성 중 오류가 발생했습니다');
+                showToast('', '생성 중 오류가 발생했습니다');
                 console.error(error);
             }
         }
@@ -1175,19 +1350,19 @@
             // qrcodejs creates both canvas and img, prefer canvas
             const canvas = container.querySelector('canvas');
             const img = container.querySelector('img');
-            
+
             if (canvas) {
                 const link = document.createElement('a');
                 link.download = 'qrcode.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-                showToast('✅', 'PNG 파일이 다운로드되었습니다');
+                showToast('', 'PNG 파일이 다운로드되었습니다');
             } else if (img) {
                 const link = document.createElement('a');
                 link.download = 'qrcode.png';
                 link.href = img.src;
                 link.click();
-                showToast('✅', 'PNG 파일이 다운로드되었습니다');
+                showToast('', 'PNG 파일이 다운로드되었습니다');
             }
         });
 
@@ -1200,7 +1375,7 @@
 
             const canvas = container.querySelector('canvas');
             if (!canvas) {
-                showToast('❌', 'QR 코드를 먼저 생성해주세요');
+                showToast('', 'QR 코드를 먼저 생성해주세요');
                 return;
             }
 
@@ -1212,11 +1387,11 @@
             const ctx = canvas.getContext('2d');
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const moduleCount = Math.sqrt(imageData.data.length / 4);
-            
+
             // Create SVG from canvas data
             let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${canvas.width} ${canvas.height}">`;
             svg += `<rect width="100%" height="100%" fill="${bgColor}"/>`;
-            
+
             // Sample the canvas and create rectangles for dark modules
             const moduleSize = canvas.width / Math.round(canvas.width / 10); // approximate module size
             for (let y = 0; y < canvas.height; y += moduleSize) {
@@ -1237,7 +1412,7 @@
             link.href = url;
             link.click();
             URL.revokeObjectURL(url);
-            showToast('✅', 'SVG 파일이 다운로드되었습니다');
+            showToast('', 'SVG 파일이 다운로드되었습니다');
         });
 
         // ============================================
@@ -1252,7 +1427,7 @@
         async function startScanning() {
             try {
                 html5QrCode = new Html5Qrcode("reader");
-                
+
                 await html5QrCode.start(
                     { facingMode: "environment" },
                     {
@@ -1266,10 +1441,10 @@
                 isScanning = true;
                 startScanBtn.disabled = true;
                 stopScanBtn.disabled = false;
-                showToast('📷', '카메라가 활성화되었습니다');
+                showToast('', '카메라가 활성화되었습니다');
             } catch (error) {
                 console.error(error);
-                showToast('❌', '카메라 접근 권한이 필요합니다');
+                showToast('', '카메라 접근 권한이 필요합니다');
             }
         }
 
@@ -1290,7 +1465,7 @@
             }
 
             displayScanResult(decodedText);
-            showToast('✅', 'QR 코드를 스캔했습니다');
+            showToast('', 'QR 코드를 스캔했습니다');
         }
 
         function onScanFailure(error) {
@@ -1310,11 +1485,11 @@
             // Detect type and show appropriate UI
             const type = detectContentType(text);
             resultType.innerHTML = getTypeIcon(type);
-            
+
             if (type === 'url') {
                 openUrlBtn.style.display = 'inline-flex';
                 openUrlBtn.onclick = () => window.open(text, '_blank');
-                
+
                 // URL Safety Check
                 const safety = checkUrlSafety(text);
                 displayUrlSafety(safety);
@@ -1335,12 +1510,12 @@
 
         function getTypeIcon(type) {
             const icons = {
-                url: '<span>🔗</span> URL',
-                contact: '<span>👤</span> 연락처',
-                wifi: '<span>📶</span> WiFi',
-                email: '<span>📧</span> 이메일',
-                phone: '<span>📞</span> 전화번호',
-                text: '<span>📝</span> 텍스트'
+                url: '<span></span> URL',
+                contact: '<span></span> 연락처',
+                wifi: '<span></span> WiFi',
+                email: '<span></span> 이메일',
+                phone: '<span></span> 전화번호',
+                text: '<span></span> 텍스트'
             };
             return icons[type] || icons.text;
         }
@@ -1362,7 +1537,7 @@
                 if (urlObj.protocol === 'http:') {
                     result.level = 'warning';
                     result.title = '주의 필요';
-                    result.details.push('⚠️ HTTPS가 아닌 HTTP 프로토콜 사용');
+                    result.details.push(' HTTPS가 아닌 HTTP 프로토콜 사용');
                 }
 
                 // Check for suspicious patterns
@@ -1376,13 +1551,13 @@
                 suspiciousPatterns.forEach(({ pattern, message }) => {
                     if (pattern.test(url)) {
                         if (result.level === 'safe') result.level = 'warning';
-                        result.details.push(`⚠️ ${message}`);
+                        result.details.push(` ${message}`);
                     }
                 });
 
                 // Check URL length
                 if (url.length > 200) {
-                    result.details.push('⚠️ 매우 긴 URL');
+                    result.details.push(' 매우 긴 URL');
                     if (result.level === 'safe') result.level = 'warning';
                 }
 
@@ -1391,19 +1566,19 @@
                 if (dangerousTlds.some(tld => urlObj.hostname.endsWith(tld))) {
                     result.level = 'danger';
                     result.title = '위험 가능성';
-                    result.details.push('🚨 스팸에 자주 사용되는 도메인');
+                    result.details.push(' 스팸에 자주 사용되는 도메인');
                 }
 
                 // If no issues found
                 if (result.details.length === 0) {
-                    result.details.push('✅ HTTPS 프로토콜 사용');
-                    result.details.push('✅ 의심스러운 패턴 없음');
+                    result.details.push(' HTTPS 프로토콜 사용');
+                    result.details.push(' 의심스러운 패턴 없음');
                 }
 
             } catch (e) {
                 result.level = 'danger';
                 result.title = '잘못된 URL';
-                result.details.push('🚨 URL 형식이 올바르지 않음');
+                result.details.push(' URL 형식이 올바르지 않음');
             }
 
             return result;
@@ -1416,8 +1591,8 @@
             const safetyDetails = document.getElementById('safetyDetails');
 
             urlSafety.className = 'url-safety visible ' + safety.level;
-            
-            const icons = { safe: '✅', warning: '⚠️', danger: '🚨' };
+
+            const icons = { safe: '', warning: '', danger: '' };
             safetyIcon.textContent = icons[safety.level];
             safetyTitle.textContent = safety.title;
             safetyDetails.innerHTML = safety.details.join('<br>');
@@ -1429,14 +1604,14 @@
         document.getElementById('copyResult').addEventListener('click', () => {
             const content = document.getElementById('resultContent').textContent;
             navigator.clipboard.writeText(content).then(() => {
-                showToast('✅', '클립보드에 복사되었습니다');
+                showToast('', '클립보드에 복사되었습니다');
             });
         });
 
         document.getElementById('saveToHistory').addEventListener('click', () => {
             const content = document.getElementById('resultContent').textContent;
             const type = detectContentType(content);
-            
+
             const item = {
                 id: Date.now(),
                 content,
@@ -1446,10 +1621,10 @@
 
             scanHistory.unshift(item);
             if (scanHistory.length > 50) scanHistory.pop(); // Limit to 50 items
-            
+
             localStorage.setItem('qr-scan-history', JSON.stringify(scanHistory));
             renderHistory();
-            showToast('✅', '히스토리에 저장되었습니다');
+            showToast('', '히스토리에 저장되었습니다');
         });
 
         document.getElementById('clearHistory').addEventListener('click', () => {
@@ -1457,13 +1632,13 @@
                 scanHistory = [];
                 localStorage.setItem('qr-scan-history', JSON.stringify(scanHistory));
                 renderHistory();
-                showToast('✅', '히스토리가 초기화되었습니다');
+                showToast('', '히스토리가 초기화되었습니다');
             }
         });
 
         document.getElementById('exportCsv').addEventListener('click', () => {
             if (scanHistory.length === 0) {
-                showToast('❌', '내보낼 기록이 없습니다');
+                showToast('', '내보낼 기록이 없습니다');
                 return;
             }
 
@@ -1480,36 +1655,36 @@
             link.href = url;
             link.click();
             URL.revokeObjectURL(url);
-            showToast('✅', 'CSV 파일이 다운로드되었습니다');
+            showToast('', 'CSV 파일이 다운로드되었습니다');
         });
 
         function renderHistory() {
             const historyList = document.getElementById('historyList');
-            
+
             if (scanHistory.length === 0) {
                 historyList.innerHTML = '<div class="empty-history"><p>스캔 기록이 없습니다</p></div>';
                 return;
             }
 
             const typeIcons = {
-                url: '🔗',
-                contact: '👤',
-                wifi: '📶',
-                email: '📧',
-                phone: '📞',
-                text: '📝'
+                url: '',
+                contact: '',
+                wifi: '',
+                email: '',
+                phone: '',
+                text: ''
             };
 
             historyList.innerHTML = scanHistory.map(item => `
                 <div class="history-item" data-id="${item.id}">
-                    <div class="history-item-type">${typeIcons[item.type] || '📝'}</div>
+                    <div class="history-item-type">${typeIcons[item.type] || ''}</div>
                     <div class="history-item-content">
                         <div class="history-item-text">${escapeHtml(item.content)}</div>
                         <div class="history-item-time">${formatDate(item.timestamp)}</div>
                     </div>
                     <div class="history-item-actions">
-                        <button onclick="copyHistoryItem('${item.id}')" title="복사">📋</button>
-                        <button onclick="deleteHistoryItem('${item.id}')" title="삭제">🗑️</button>
+                        <button onclick="copyHistoryItem('${item.id}')" title="복사">복사</button>
+                        <button onclick="deleteHistoryItem('${item.id}')" title="삭제">삭제</button>
                     </div>
                 </div>
             `).join('');
@@ -1519,7 +1694,7 @@
             const item = scanHistory.find(h => h.id === parseInt(id));
             if (item) {
                 navigator.clipboard.writeText(item.content).then(() => {
-                    showToast('✅', '클립보드에 복사되었습니다');
+                    showToast('', '클립보드에 복사되었습니다');
                 });
             }
         }
@@ -1528,7 +1703,7 @@
             scanHistory = scanHistory.filter(h => h.id !== parseInt(id));
             localStorage.setItem('qr-scan-history', JSON.stringify(scanHistory));
             renderHistory();
-            showToast('✅', '삭제되었습니다');
+            showToast('', '삭제되었습니다');
         }
 
         function escapeHtml(text) {

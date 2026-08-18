@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" data-theme="light">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,7 +34,7 @@
             --shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         }
 
-        [data-theme="light"] {
+        :root {
             --bg-primary: #fafafa;
             --bg-secondary: #ffffff;
             --bg-tertiary: #f4f4f5;
@@ -83,69 +83,7 @@
             margin: 0 auto;
             padding: 2rem;
         }
-
-        /* Header */
-        header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .logo {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .logo-icon {
-            width: 52px;
-            height: 52px;
-            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-        }
-
-        h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .subtitle {
-            color: var(--text-secondary);
-            font-size: 1rem;
-        }
-
-        /* Theme Toggle */
-        .theme-toggle {
-            position: fixed;
-            top: 1.5rem;
-            right: 1.5rem;
-            width: 46px;
-            height: 46px;
-            border-radius: 50%;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            transition: all 0.3s;
-            z-index: 100;
-        }
-
-        .theme-toggle:hover {
-            transform: scale(1.1);
-            border-color: var(--accent);
-        }
-
-        /* Tabs */
+/* Tabs */
         .tabs {
             display: flex;
             justify-content: center;
@@ -758,7 +696,7 @@
     
 
         /* Minimal light interface override */
-        :root, [data-theme="light"] {
+        :root, :root {
             --bg-primary: #f7f8f8;
             --bg-secondary: #f0f2f2;
             --bg-tertiary: #e7ebeb;
@@ -784,33 +722,7 @@
             --gradient-accent: none;
         }
 
-        [data-theme="dark"] {
-            --bg-primary: #101314;
-            --bg-secondary: #171b1d;
-            --bg-tertiary: #202628;
-            --bg-card: rgba(24, 28, 30, 0.92);
-            --bg-input: #202628;
-            --text-primary: #f2f4f4;
-            --text-secondary: #b4bdc1;
-            --text-muted: #7f8b91;
-            --accent: #72d6c9;
-            --accent-primary: #72d6c9;
-            --accent-secondary: #72d6c9;
-            --accent-light: #72d6c9;
-            --accent-glow: rgba(114, 214, 201, 0.08);
-            --success: #8bd39a;
-            --warning: #e0b85f;
-            --danger: #ffb4ab;
-            --error: #ffb4ab;
-            --border: #30383c;
-            --border-color: #30383c;
-            --border-hover: #465156;
-            --shadow: 0 1px 2px rgba(0, 0, 0, 0.28);
-            --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.28);
-            --gradient-accent: none;
-        }
-
-        body {
+body {
             background: var(--bg-primary) !important;
             color: var(--text-primary);
             line-height: 1.5;
@@ -848,22 +760,7 @@
             margin-left: 0;
         }
 
-        .theme-toggle, #theme-toggle, #themeToggle {
-            min-width: 64px;
-            min-height: 34px;
-            width: auto !important;
-            height: 34px !important;
-            border-radius: 8px !important;
-            padding: 0 10px !important;
-            background: var(--bg-card) !important;
-            border: 1px solid var(--border-color, var(--border)) !important;
-            color: var(--text-secondary) !important;
-            box-shadow: none !important;
-            transform: none !important;
-            font-size: 0.78rem !important;
-        }
-
-        .card, .panel, .section, .input-panel, .output-panel, .preview-panel,
+.card, .panel, .section, .input-panel, .output-panel, .preview-panel,
         .control-panel, .controls-panel, .options-panel, .settings-panel,
         .editor-panel, .preview-section, .tool-panel, .qr-card,
         .generator-card, .scanner-card, .info-section, .stats-panel,
@@ -933,32 +830,7 @@
     </style>
     <!-- Minimal sharp visual system -->
     <style id="minimal-sharp-theme">
-        :root, [data-theme="light"], [data-theme="dark"] {
-            --bg-primary: #ffffff;
-            --bg-secondary: #ffffff;
-            --bg-tertiary: #ffffff;
-            --bg-card: #ffffff;
-            --bg-card-hover: #ffffff;
-            --bg-input: #ffffff;
-            --bg: #ffffff;
-            --panel: #ffffff;
-            --panel-strong: #ffffff;
-            --preview-bg: #ffffff;
-            --accent: #D2E0E5;
-            --accent-primary: #D2E0E5;
-            --accent-secondary: #D2E0E5;
-            --accent-light: #D2E0E5;
-            --accent-strong: #D2E0E5;
-            --accent-dim: #D2E0E5;
-            --primary: #D2E0E5;
-            --primary-color: #D2E0E5;
-            --gradient-accent: none;
-            --gradient-1: none;
-            --gradient-2: none;
-            --gradient-3: none;
-        }
-
-        html, body {
+html, body {
             background: #ffffff !important;
         }
 
@@ -983,42 +855,7 @@
     </style>
     <!-- Rational project palette -->
     <style id="rational-project-palette">
-        :root, [data-theme="light"], [data-theme="dark"] {
-            --bg-primary: #FFFFFF;
-            --bg-secondary: #F3F7FA;
-            --bg-tertiary: #F3F7FA;
-            --bg-card: #FFFFFF;
-            --bg-card-hover: #F3F7FA;
-            --bg-input: #EDF3F7;
-            --bg: #FFFFFF;
-            --panel: #FFFFFF;
-            --panel-strong: #F3F7FA;
-            --preview-bg: #F3F7FA;
-            --text-primary: #1D2931;
-            --text-secondary: #64747F;
-            --text-muted: #64747F;
-            --border: #D6E1E7;
-            --border-color: #D6E1E7;
-            --border-hover: #5D86A1;
-            --accent: #5D86A1;
-            --accent-primary: #5D86A1;
-            --accent-secondary: #416B87;
-            --accent-light: #F3F7FA;
-            --accent-strong: #416B87;
-            --accent-dim: #F3F7FA;
-            --primary: #5D86A1;
-            --primary-color: #5D86A1;
-            --success: #4B8065;
-            --warning: #A87834;
-            --danger: #A65A5A;
-            --error: #A65A5A;
-            --gradient-accent: none;
-            --gradient-1: none;
-            --gradient-2: none;
-            --gradient-3: none;
-        }
-
-        html, body {
+html, body {
             background: #FFFFFF !important;
             color: #1D2931 !important;
         }
@@ -1041,42 +878,7 @@
     </style>
     <!-- MarkdownPreview shared visual system -->
     <style id="markdown-preview-theme">
-        :root, [data-theme="light"], [data-theme="dark"] {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f6f8fa;
-            --bg-tertiary: #f6f8fa;
-            --bg-card: #ffffff;
-            --bg-card-hover: #f6f8fa;
-            --bg-editor: #ffffff;
-            --bg-input: #f6f8fa;
-            --bg: #ffffff;
-            --panel: #ffffff;
-            --panel-strong: #f6f8fa;
-            --preview-bg: #f6f8fa;
-            --accent: #0969da;
-            --accent-primary: #0969da;
-            --accent-secondary: #0550ae;
-            --accent-light: #f6f8fa;
-            --accent-strong: #0550ae;
-            --primary: #0969da;
-            --primary-color: #0969da;
-            --text-primary: #24292f;
-            --text-secondary: #57606a;
-            --text-muted: #8c959f;
-            --border: #d0d7de;
-            --border-color: #d0d7de;
-            --border-hover: #0969da;
-            --code-bg: #f6f8fa;
-            --blockquote-border: #0969da;
-            --link-color: #0969da;
-            --table-border: #d0d7de;
-            --table-alt-bg: #f6f8fa;
-            --gradient-accent: linear-gradient(135deg, #0969da 0%, #0550ae 100%);
-            --shadow: 0 1px 2px rgba(27, 31, 36, 0.08);
-            --shadow-card: 0 1px 2px rgba(27, 31, 36, 0.08);
-        }
-
-        html, body {
+html, body {
             background: #ffffff !important;
             color: #24292f !important;
         }
@@ -1135,7 +937,6 @@
     </style>
 </head>
 <body>
-    <button class="theme-toggle" id="themeToggle" title="테마 변경">Light</button>
 
     <div class="container">
         <header>
@@ -1386,22 +1187,6 @@
         let html5QrCode = null;
         let isScanning = false;
         let scanHistory = JSON.parse(localStorage.getItem('qr-scan-history') || '[]');
-
-        // ============================================
-        // Theme
-        // ============================================
-        const themeToggle = document.getElementById('themeToggle');
-        const savedTheme = localStorage.getItem('qr-theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        themeToggle.textContent = savedTheme === 'dark' ? 'Dark' : 'Light';
-
-        themeToggle.addEventListener('click', () => {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', next);
-            localStorage.setItem('qr-theme', next);
-            themeToggle.textContent = next === 'dark' ? 'Dark' : 'Light';
-        });
 
         // ============================================
         // Tabs
